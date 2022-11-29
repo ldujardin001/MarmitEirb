@@ -15,7 +15,7 @@ class CategoriesResponse {
 class Category {
     var idCategory: String? = null
     var strCategory: String? = null
-    var strCategporyThumb: String? = null
+    var strCategoryThumb: String? = null
     var strCategoryDescription: String? = null
     /* ... */
 }
