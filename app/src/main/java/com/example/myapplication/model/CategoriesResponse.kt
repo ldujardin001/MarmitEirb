@@ -1,6 +1,8 @@
 package com.example.myapplication.model
 
+import android.net.Uri
 import com.google.gson.annotations.SerializedName
+import java.net.URL
 
 class CategoriesResponse {
     var categories: List<Category>? = null
@@ -12,7 +14,7 @@ class Category {
     @SerializedName("strCategory")
     var name: String? = null
     @SerializedName("strCategoryThumb")
-    var thumb: String? = null
+    var thumb: URL? = null
     @SerializedName("strCategoryDescription")
     var categoryDescription: String? = null
 }

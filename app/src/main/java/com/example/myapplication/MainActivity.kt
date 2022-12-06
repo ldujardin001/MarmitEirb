@@ -13,7 +13,7 @@ import okhttp3.*
 import java.io.IOException
 import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
@@ -49,14 +49,14 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
                     categoriesResponse = parseCategoriesResponse(it)
-                    displayPlanets()
+                    displayCategories()
                     Log.d("OKHTTP", "Got " + categoriesResponse?.categories?.count())
                 }
             }
         })
     }
 
-    private fun displayPlanets() {
+    private fun displayCategories() {
         categoriesResponse?.categories?.let { it ->
             runOnUiThread {
                 refreshView(it)
@@ -75,4 +75,9 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = categoryAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }
+
+    override fun onItemClick(item: Category, position: Int){
+
+    }
+
 }
