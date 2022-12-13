@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.Category
 import com.example.myapplication.R
+import com.squareup.picasso.Picasso
+import java.lang.System.load
 
 class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     var nameTextView: TextView = itemView.findViewById(R.id.item_category_name)
@@ -26,15 +28,12 @@ class CategoryAdapter(val categories: List<Category>): RecyclerView.Adapter<Cate
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.nameTextView.text = categories[position].name
-
-        //holder.imageView.setImageURI(categories[position].thumb)
+        Picasso.get().load(categories[position].thumb).into(holder.imageView)
     }
 
     override fun getItemCount(): Int {
         return categories.count()
     }
-
-    // fun loadBitmapImage(url: String): Bitmap {}
 }
 
 

@@ -14,7 +14,7 @@ class Category {
     @SerializedName("strCategory")
     var name: String? = null
     @SerializedName("strCategoryThumb")
-    var thumb: URL? = null
+    var thumb: String? = null
     @SerializedName("strCategoryDescription")
     var categoryDescription: String? = null
 }
