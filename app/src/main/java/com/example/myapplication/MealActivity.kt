@@ -1,25 +1,23 @@
 package com.example.myapplication
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.model.CategoriesResponse
-import com.example.myapplication.model.Category
-//import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.example.myapplication.model.MealsResponse
+import com.example.myapplication.model.Meal
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 import java.net.URL
 
-class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
+class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var categoryAdapter: CategoryAdapter
-//    private lateinit var circularProgressIndicator: CircularProgressIndicator
-    private var categoriesResponse: CategoriesResponse? = null
+    private lateinit var mealAdapter: MealAdapter
+    //    private lateinit var circularProgressIndicator: CircularProgressIndicator
+    private var mealsResponse: MealsResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
         //circularProgressIndicator.visibility = View.VISIBLE
 
 
-        val url = URL("https://www.themealdb.com/api/json/v1/1/categories.php")
+        val url = URL("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + intent.getStringExtra("category_name"))
         val request = Request.Builder()
             .url(url)
             .build()
@@ -49,39 +47,37 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
             }
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
-                    categoriesResponse = parseCategoriesResponse(it)
-                    displayCategories()
-                    Log.d("OKHTTP", "Got " + categoriesResponse?.categories?.count())
+                    mealsResponse = parseMealsResponse(it)
+                    displayMeals()
+                    Log.d("OKHTTP", "Got " + mealsResponse?.meals?.count())
                 }
             }
         })
     }
 
-    private fun displayCategories() {
-        categoriesResponse?.categories?.let { it ->
+    private fun displayMeals() {
+        mealsResponse?.meals?.let { it ->
             runOnUiThread {
                 refreshView(it)
             }
         }
     }
 
-    private fun parseCategoriesResponse(json: String): CategoriesResponse? {
+    private fun parseMealsResponse(json: String): MealsResponse? {
         val gson = Gson()
-        return gson.fromJson(json, CategoriesResponse::class.java)
+        return gson.fromJson(json, MealsResponse::class.java)
     }
 
-    private fun refreshView(it1: List<Category>) {
+    private fun refreshView(it1: List<Meal>) {
         //circularProgressIndicator.visibility = View.GONE
-        categoryAdapter = CategoryAdapter(it1, this)
-        recyclerView.adapter = categoryAdapter
+        mealAdapter = MealAdapter(it1, this)
+        recyclerView.adapter = mealAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }
 
-    override fun onItemClick(item: Category, position: Int){
+    override fun onItemClick(item: Meal, position: Int){
         Log.d("Ok","On clique sur le bouton")
-        val intent = Intent(this, MealActivity::class.java)
-        intent.putExtra("category_name", item.name)
-        startActivity(intent)
+
     }
 
 }
