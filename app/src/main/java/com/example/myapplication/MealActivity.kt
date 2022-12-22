@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.MealsResponse
@@ -71,6 +72,13 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
     private fun refreshView(it1: List<Meal>) {
         //circularProgressIndicator.visibility = View.GONE
         mealAdapter = MealAdapter(it1, this)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                baseContext,
+                layoutManager.orientation
+            )
+        )
         recyclerView.adapter = mealAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.CategoriesResponse
@@ -73,6 +74,13 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
     private fun refreshView(it1: List<Category>) {
         //circularProgressIndicator.visibility = View.GONE
         categoryAdapter = CategoryAdapter(it1, this)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                baseContext,
+                layoutManager.orientation
+            )
+        )
         recyclerView.adapter = categoryAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }
