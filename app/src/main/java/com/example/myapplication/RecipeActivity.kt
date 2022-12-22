@@ -1,33 +1,35 @@
 package com.example.myapplication
 
-import android.content.Intent
+
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.model.Category
-import com.example.myapplication.model.MealsResponse
 import com.example.myapplication.model.Meal
+import com.example.myapplication.model.MealsResponse
 import com.example.myapplication.model.RecipeResponse
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 import java.net.URL
 
-class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
+//data class myClass(val idMeal:String, val strName:String, val strInstruction:String, val strMealThumb:String, val strYoutube:String, val strIngredients:List<String>)
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var mealAdapter: MealAdapter
+class RecipeActivity : AppCompatActivity(), OnMealItemClickListener {
+
+    //private lateinit var recyclerView: RecyclerView
+    //private lateinit var IngredientsAdapter: IngredientsAdapter
     //    private lateinit var circularProgressIndicator: CircularProgressIndicator
-    private var mealsResponse: MealsResponse? = null
+    private var recipeResponse: RecipeResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerView = findViewById(R.id.recycler_view)
+        //recyclerView = findViewById(R.id.recycler_view)
+
         // if we want a loading indicator
 //        circularProgressIndicator = findViewById(R.id.progress_circular)
 
@@ -35,7 +37,7 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
         //circularProgressIndicator.visibility = View.VISIBLE
 
 
-        val url = URL("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + intent.getStringExtra("category_name"))
+        val url = URL("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + intent.getStringExtra("recipe_id"))
         val request = Request.Builder()
             .url(url)
             .build()
@@ -51,46 +53,40 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
             }
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
-                    mealsResponse = parseMealsResponse(it)
-                    displayMeals()
-                    Log.d("OKHTTP", "Got " + mealsResponse?.meals?.count())
+                    recipeResponse = parseRecipeResponse(it)
+                    displayRecipe()
+                    Log.d("OKHTTP", "Got recipe")
                 }
             }
         })
     }
 
-    private fun displayMeals() {
-        mealsResponse?.meals?.let { it ->
+    private fun displayRecipe() {
+        recipeResponse?.let { it ->
             runOnUiThread {
                 refreshView(it)
             }
         }
     }
 
-    private fun parseMealsResponse(json: String): MealsResponse? {
+    private fun parseRecipeResponse(json: String): RecipeResponse? {
         val gson = Gson()
-        return gson.fromJson(json, MealsResponse::class.java)
+        val recipeResponse: RecipeResponse? = gson.fromJson(json, RecipeResponse::class.java)
+        //recipeResponse.serializeIngredients(json)
+        return recipeResponse
     }
 
-    private fun refreshView(it1: List<Meal>) {
+    private fun refreshView(it1: RecipeResponse) {
         //circularProgressIndicator.visibility = View.GONE
-        mealAdapter = MealAdapter(it1, this)
+        IngredientsAdapter = IngredientsAdapter(it1, this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                baseContext,
-                layoutManager.orientation
-            )
-        )
-        recyclerView.adapter = mealAdapter
+        recyclerView.adapter = IngredientsAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }
 
-    override fun onItemClick(item: Meal, position: Int) {
+    override fun onItemClick(item: Meal, position: Int){
         Log.d("Ok","On clique sur le bouton")
-        val intent = Intent(this, RecipeActivity::class.java)
-        intent.putExtra("recipe_id", item.id)
-        startActivity(intent)
+
     }
 
 }
