@@ -3,10 +3,12 @@ package com.example.myapplication
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.model.IngredientMeasure
 import com.example.myapplication.model.Meal
 import com.example.myapplication.model.MealsResponse
 import com.example.myapplication.model.RecipeResponse
@@ -17,10 +19,10 @@ import java.net.URL
 
 //data class myClass(val idMeal:String, val strName:String, val strInstruction:String, val strMealThumb:String, val strYoutube:String, val strIngredients:List<String>)
 
-class RecipeActivity : AppCompatActivity(), OnMealItemClickListener {
+class RecipeActivity : AppCompatActivity() {
 
-    //private lateinit var recyclerView: RecyclerView
-    //private lateinit var IngredientsAdapter: IngredientsAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var ingredientsAdapter: IngredientsAdapter
     //    private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var recipeResponse: RecipeResponse? = null
 
@@ -28,7 +30,7 @@ class RecipeActivity : AppCompatActivity(), OnMealItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //recyclerView = findViewById(R.id.recycler_view)
+        recyclerView = findViewById(R.id.recycler_view)
 
         // if we want a loading indicator
 //        circularProgressIndicator = findViewById(R.id.progress_circular)
@@ -70,23 +72,22 @@ class RecipeActivity : AppCompatActivity(), OnMealItemClickListener {
     }
 
     private fun parseRecipeResponse(json: String): RecipeResponse? {
+        Log.d("d", "START PARSE")
         val gson = Gson()
         val recipeResponse: RecipeResponse? = gson.fromJson(json, RecipeResponse::class.java)
-        //recipeResponse.serializeIngredients(json)
+        recipeResponse?.serializeIngredients(json)
         return recipeResponse
     }
 
     private fun refreshView(it1: RecipeResponse) {
         //circularProgressIndicator.visibility = View.GONE
-        IngredientsAdapter = IngredientsAdapter(it1, this)
+        ingredientsAdapter = IngredientsAdapter(it1.ingredients)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = IngredientsAdapter
+        recyclerView.adapter = ingredientsAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        // TODO : Afficher le reste des infos (noms, instructions, yt), mais pas avec adapter car pas liste
+        val imageView: ImageView
     }
 
-    override fun onItemClick(item: Meal, position: Int){
-        Log.d("Ok","On clique sur le bouton")
-
-    }
 
 }

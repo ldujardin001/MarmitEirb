@@ -13,10 +13,9 @@ class IngredientsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     var ingredientTextView: TextView = itemView.findViewById(R.id.item_ingredient_name)
     var measureTextView: TextView = itemView.findViewById(R.id.item_ingredient_measure)
 }
-class IngredientsAdapter(val ingredients:List<IngredientMeasure>, var clickListener: OnMealItemClickListener): RecyclerView.Adapter<IngredientsViewHolder>() {
-
+class IngredientsAdapter(val ingredients:MutableList<IngredientMeasure>): RecyclerView.Adapter<IngredientsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientsViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_ingredient_name, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_ingredient, parent, false)
         return IngredientsViewHolder(itemView)
     }
 

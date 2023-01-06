@@ -1,10 +1,14 @@
 package com.example.myapplication.model
 
+import android.util.Log
+import com.google.gson.JsonParser
 import com.google.gson.annotations.SerializedName
 
-class IngredientMeasure {
-    var ingredient:String? = null
-    var measure:String? = null
+class IngredientMeasure(val ingredient: String, val measure: String) {
+
+    override fun toString(): String {
+        return "IngredientMeasure(ingredient='$ingredient', measure='$measure')"
+    }
 }
 
 class RecipeResponse {
@@ -18,19 +22,25 @@ class RecipeResponse {
     var thumb: String? = null
     @SerializedName("strYoutube")
     var youtube: String? = null
-    @SerializedName("strIngredient1")
-    var ingredient1:String? = null
-    @SerializedName("strIngredient2")
-    var ingredient2:String? = null
-    @SerializedName("strMeasure1")
-    var measure1:String? = null
-    @SerializedName("strMeasure2")
-    var measure2:String? = null
 
-    //var ingredients: List<IngredientMeasure>? = null
+    var ingredients = mutableListOf<IngredientMeasure>()
 
     fun serializeIngredients(json:String) {
-        for(i in 0..19){
+        val parser = JsonParser()
+        val jsonElement = parser.parse(json)
+        var jsonObj = jsonElement.asJsonObject
+        var meal = jsonObj.get("meals").asJsonArray.get(0).asJsonObject
+        for (i in 1..20) {
+            val ing = meal.get("strIngredient$i").asString
+            val mea = meal.get("strMeasure$i").asString
+
+            if (ing != ""){
+                val ingredient = IngredientMeasure(ing, mea)
+                ingredients.add(ingredient)
+            }
         }
+
+        Log.d("Ingredients ser", ingredients.toString())
+
     }
 }
