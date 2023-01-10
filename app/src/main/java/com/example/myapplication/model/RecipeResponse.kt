@@ -23,6 +23,10 @@ class RecipeResponse {
     @SerializedName("strYoutube")
     var youtube: String? = null
 
+    override fun toString(): String {
+        return "RecipeResponse(id=$id, name=$name, instructions=$instructions, thumb=$thumb, youtube=$youtube)"
+    }
+
     var ingredients = mutableListOf<IngredientMeasure>()
 
     fun serializeIngredients(json:String) {
