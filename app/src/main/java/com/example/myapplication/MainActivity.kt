@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.CategoriesResponse
 import com.example.myapplication.model.Category
-//import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
 
         recyclerView = findViewById(R.id.recycler_view)
         // if we want a loading indicator
-//        circularProgressIndicator = findViewById(R.id.progress_circular)
+        //circularProgressIndicator = findViewById(R.id.progress_circular)
 
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
         //circularProgressIndicator.visibility = View.VISIBLE

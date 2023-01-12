@@ -21,8 +21,6 @@ import okhttp3.*
 import java.io.IOException
 import java.net.URL
 
-//data class myClass(val idMeal:String, val strName:String, val strInstruction:String, val strMealThumb:String, val strYoutube:String, val strIngredients:List<String>)
-
 class RecipeActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
