@@ -1,9 +1,13 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,40 +27,64 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
     private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var categoriesResponse: CategoriesResponse? = null
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        recyclerView = findViewById(R.id.recycler_view)
-        // if we want a loading indicator
-        circularProgressIndicator = findViewById(R.id.progress_circular)
+        if(! isOnline(applicationContext)) {
+            setContentView(R.layout.activity_offline)
 
-        // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
-        circularProgressIndicator.visibility = View.VISIBLE
+        }
+        else {
+            setContentView(R.layout.activity_main)
+            recyclerView = findViewById(R.id.recycler_view)
+            // if we want a loading indicator
+            circularProgressIndicator = findViewById(R.id.progress_circular)
 
 
-        val url = URL("https://www.themealdb.com/api/json/v1/1/categories.php")
-        val request = Request.Builder()
-            .url(url)
-            .build()
+            val fav: View = findViewById(R.id.fab)
 
-        val client = OkHttpClient()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("OKHTTP", e.localizedMessage)
-                runOnUiThread {
-                    circularProgressIndicator.visibility = View.GONE
-                }
+            fav.setOnClickListener{
+                val intent = Intent(this, FavoriteActivity::class.java)
+                startActivity(intent)
             }
-            override fun onResponse(call: Call, response: Response) {
-                response.body?.string()?.let {
-                    categoriesResponse = parseCategoriesResponse(it)
-                    displayCategories()
-                    Log.d("OKHTTP", "Got " + categoriesResponse?.categories?.count())
+
+
+            // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
+            circularProgressIndicator.visibility = View.VISIBLE
+
+
+            val url = URL("https://www.themealdb.com/api/json/v1/1/categories.php")
+            val request = Request.Builder()
+                .url(url)
+                .build()
+
+            val client = OkHttpClient()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("OKHTTP", e.localizedMessage)
+                    runOnUiThread {
+                        circularProgressIndicator.visibility = View.GONE
+                    }
                 }
-            }
-        })
+                override fun onResponse(call: Call, response: Response) {
+                    response.body?.string()?.let {
+                        categoriesResponse = parseCategoriesResponse(it)
+                        displayCategories()
+                        Log.d("OKHTTP", "Got " + categoriesResponse?.categories?.count())
+                    }
+                }
+            })
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun isOnline(context: Context): Boolean {
+        val manager = context.getSystemService(ConnectivityManager::class.java)
+        val currentNetwork = manager.activeNetwork
+        return currentNetwork != null;
     }
 
     private fun displayCategories() {

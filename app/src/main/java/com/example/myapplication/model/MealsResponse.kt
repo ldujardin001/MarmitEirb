@@ -12,4 +12,10 @@ class Meal {
     var name: String? = null
     @SerializedName("strMealThumb")
     var thumb: String? = null
+
+    constructor(id: String?, name: String?, thumb: String?) {
+        this.id = id
+        this.name = name
+        this.thumb = thumb
+    }
 }

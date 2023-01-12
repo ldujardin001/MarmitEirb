@@ -31,6 +31,7 @@ class RecipeActivity : AppCompatActivity() {
     private lateinit var instructions: TextView
     private lateinit var youtube: TextView
     private lateinit var image: ImageView
+    private lateinit var heartView: ImageView
     private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var recipeResponse: RecipeResponse? = null
 
@@ -39,7 +40,7 @@ class RecipeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recipe)
 
         recyclerView = findViewById(R.id.recycler_view)
-
+        heartView = findViewById(R.id.heart_button)
         recipeName = findViewById(R.id.recipe_name)
         instructions = findViewById(R.id.instructions_content)
         youtube = findViewById(R.id.youtube)
@@ -59,6 +60,10 @@ class RecipeActivity : AppCompatActivity() {
             .build()
 
         val client = OkHttpClient()
+
+        heartView.setOnClickListener{
+            heartView.isSelected = !heartView.isSelected
+        }
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
