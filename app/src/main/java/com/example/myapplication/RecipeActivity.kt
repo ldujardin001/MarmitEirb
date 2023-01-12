@@ -14,6 +14,7 @@ import com.example.myapplication.model.IngredientMeasure
 import com.example.myapplication.model.Meal
 import com.example.myapplication.model.MealsResponse
 import com.example.myapplication.model.RecipeResponse
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.squareup.picasso.Picasso
@@ -30,7 +31,7 @@ class RecipeActivity : AppCompatActivity() {
     private lateinit var instructions: TextView
     private lateinit var youtube: TextView
     private lateinit var image: ImageView
-    //    private lateinit var circularProgressIndicator: CircularProgressIndicator
+    private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var recipeResponse: RecipeResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +47,10 @@ class RecipeActivity : AppCompatActivity() {
 
 
         // if we want a loading indicator
-//        circularProgressIndicator = findViewById(R.id.progress_circular)
+        circularProgressIndicator = findViewById(R.id.progress_circular)
 
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
-        //circularProgressIndicator.visibility = View.VISIBLE
+        circularProgressIndicator.visibility = View.VISIBLE
 
 
         val url = URL("https://www.themealdb.com/api/json/v1/1/lookup.php?i=" + intent.getStringExtra("recipe_id"))
@@ -62,9 +63,9 @@ class RecipeActivity : AppCompatActivity() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("OKHTTP", e.localizedMessage)
-                /*runOnUiThread {
+                runOnUiThread {
                     circularProgressIndicator.visibility = View.GONE
-                }*/
+                }
             }
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
@@ -99,7 +100,7 @@ class RecipeActivity : AppCompatActivity() {
     }
 
     private fun refreshView(it1: RecipeResponse) {
-        //circularProgressIndicator.visibility = View.GONE
+        circularProgressIndicator.visibility = View.GONE
         ingredientsAdapter = IngredientsAdapter(it1.ingredients)
         //val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = ingredientsAdapter

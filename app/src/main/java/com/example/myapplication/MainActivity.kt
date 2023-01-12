@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var categoryAdapter: CategoryAdapter
-//    private lateinit var circularProgressIndicator: CircularProgressIndicator
+    private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var categoriesResponse: CategoriesResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +29,10 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
 
         recyclerView = findViewById(R.id.recycler_view)
         // if we want a loading indicator
-        //circularProgressIndicator = findViewById(R.id.progress_circular)
+        circularProgressIndicator = findViewById(R.id.progress_circular)
 
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
-        //circularProgressIndicator.visibility = View.VISIBLE
+        circularProgressIndicator.visibility = View.VISIBLE
 
 
         val url = URL("https://www.themealdb.com/api/json/v1/1/categories.php")
@@ -44,9 +45,9 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("OKHTTP", e.localizedMessage)
-                /*runOnUiThread {
+                runOnUiThread {
                     circularProgressIndicator.visibility = View.GONE
-                }*/
+                }
             }
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
     }
 
     private fun refreshView(it1: List<Category>) {
-        //circularProgressIndicator.visibility = View.GONE
+        circularProgressIndicator.visibility = View.GONE
         categoryAdapter = CategoryAdapter(it1, this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(

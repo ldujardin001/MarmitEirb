@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.example.myapplication.model.Category
 import com.example.myapplication.model.MealsResponse
 import com.example.myapplication.model.Meal
 import com.example.myapplication.model.RecipeResponse
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
@@ -20,7 +22,7 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var mealAdapter: MealAdapter
-    //    private lateinit var circularProgressIndicator: CircularProgressIndicator
+    private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var mealsResponse: MealsResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +31,10 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
 
         recyclerView = findViewById(R.id.recycler_view)
         // if we want a loading indicator
-//        circularProgressIndicator = findViewById(R.id.progress_circular)
+        circularProgressIndicator = findViewById(R.id.progress_circular)
 
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
-        //circularProgressIndicator.visibility = View.VISIBLE
+        circularProgressIndicator.visibility = View.VISIBLE
 
 
         val url = URL("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + intent.getStringExtra("category_name"))
@@ -73,7 +75,7 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
     }
 
     private fun refreshView(it1: List<Meal>) {
-        //circularProgressIndicator.visibility = View.GONE
+        circularProgressIndicator.visibility = View.GONE
         mealAdapter = MealAdapter(it1, this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(
