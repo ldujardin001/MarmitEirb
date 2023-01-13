@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity(), OnCategoryItemClickListener {
         Log.d("Ok","On clique sur le bouton")
         val intent = Intent(this, MealActivity::class.java)
         intent.putExtra("category_name", item.name)
+        intent.putExtra("category_description", item.categoryDescription)
         startActivity(intent)
     }
 

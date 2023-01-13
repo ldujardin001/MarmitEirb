@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,15 +22,19 @@ import java.net.URL
 class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var categoryName: TextView
+    private lateinit var descriptionView: TextView
     private lateinit var mealAdapter: MealAdapter
     private lateinit var circularProgressIndicator: CircularProgressIndicator
     private var mealsResponse: MealsResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_meal)
 
         recyclerView = findViewById(R.id.recycler_view)
+        descriptionView = findViewById(R.id.description)
+        categoryName = findViewById(R.id.category_name)
         // if we want a loading indicator
         circularProgressIndicator = findViewById(R.id.progress_circular)
 
@@ -84,6 +89,8 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
                 layoutManager.orientation
             )
         )
+        categoryName.text = intent.getStringExtra("category_name")
+        descriptionView.text = intent.getStringExtra("category_description")
         recyclerView.adapter = mealAdapter
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
     }
