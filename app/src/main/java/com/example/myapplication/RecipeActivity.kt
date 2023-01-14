@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,7 +47,6 @@ class RecipeActivity : AppCompatActivity() {
         youtube = findViewById(R.id.youtube)
         image = findViewById(R.id.recipe_image)
 
-
         // if we want a loading indicator
         circularProgressIndicator = findViewById(R.id.progress_circular)
 
@@ -61,9 +61,6 @@ class RecipeActivity : AppCompatActivity() {
 
         val client = OkHttpClient()
 
-        heartView.setOnClickListener{
-            heartView.isSelected = !heartView.isSelected
-        }
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -75,11 +72,39 @@ class RecipeActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
                     recipeResponse = parseRecipeResponse(it)
+                    setHeartButtonClick()
                     displayRecipe()
+                    setHeartButtonStatus()
                     Log.d("OKHTTP", "Got recipe")
                 }
             }
         })
+    }
+
+
+    private fun setHeartButtonStatus() {
+        runOnUiThread {
+            if (FavoriteMeal.isFavorite(recipeResponse?.id)){
+                heartView.isSelected = !heartView.isSelected
+            }
+        }
+    }
+
+    private fun setHeartButtonClick(){
+        runOnUiThread {
+            heartView.setOnClickListener {
+                heartView.isSelected = !heartView.isSelected
+                if (heartView.isSelected) {
+                    FavoriteMeal.add(
+                        recipeResponse?.id,
+                        recipeResponse?.name,
+                        recipeResponse?.thumb
+                    )
+                } else {
+                    FavoriteMeal.remove(recipeResponse?.id)
+                }
+            }
+        }
     }
 
     private fun displayRecipe() {

@@ -20,9 +20,6 @@ class FavoriteActivity: AppCompatActivity(), OnMealItemClickListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var mealAdapter: MealAdapter
     private lateinit var circularProgressIndicator: CircularProgressIndicator
-    private var mealsResponse: MealsResponse? = null
-
-    private var fav_meals = mutableListOf<Meal>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,46 +32,18 @@ class FavoriteActivity: AppCompatActivity(), OnMealItemClickListener {
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
         circularProgressIndicator.visibility = View.VISIBLE
 
-
-        val url = URL("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + intent.getStringExtra("category_name"))
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        val client = OkHttpClient()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e("OKHTTP", e.localizedMessage)
-                /*runOnUiThread {
-                    circularProgressIndicator.visibility = View.GONE
-                }*/
-            }
-            override fun onResponse(call: Call, response: Response) {
-                response.body?.string()?.let {
-                    mealsResponse = parseMealsResponse(it)
-                    displayMeals()
-                    Log.d("OKHTTP", "Got " + mealsResponse?.meals?.count())
-                }
-            }
-        })
+        displayMeals()
     }
 
-    public fun addFavMeal(idMeal: String, strMeal: String, strMealThumb: String){
-        fav_meals.add(Meal(idMeal, strMeal, strMealThumb))
+    override fun onResume() {
+        super.onResume()
+        displayMeals()
     }
 
     private fun displayMeals() {
-        mealsResponse?.meals?.let { it ->
-            runOnUiThread {
-                refreshView(it)
-            }
+        runOnUiThread {
+            refreshView(FavoriteMeal.fav_meals)
         }
-    }
-
-    private fun parseMealsResponse(json: String): MealsResponse? {
-        val gson = Gson()
-        return gson.fromJson(json, MealsResponse::class.java)
     }
 
     private fun refreshView(it1: List<Meal>) {

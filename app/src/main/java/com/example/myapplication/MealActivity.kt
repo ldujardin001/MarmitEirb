@@ -41,6 +41,13 @@ class MealActivity  : AppCompatActivity(), OnMealItemClickListener {
         // inutile ici, car tout est visible par défaut mais pratique si on veut invisibiliser
         circularProgressIndicator.visibility = View.VISIBLE
 
+        val fav: View = findViewById(R.id.fab)
+
+        fav.setOnClickListener{
+            val intent = Intent(this, FavoriteActivity::class.java)
+            startActivity(intent)
+        }
+
 
         val url = URL("https://www.themealdb.com/api/json/v1/1/filter.php?c=" + intent.getStringExtra("category_name"))
         val request = Request.Builder()
