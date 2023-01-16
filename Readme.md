@@ -2,6 +2,7 @@
 Auteurs : Louis Dujardin et Juliette Meurgues
 
 L'application réalisée se base sur l'API The MealDB qui propose un grand nombre de recettes de cuisine rangées par catégories.
+Pour réaliser ce projet, nous avons trouvé plus pertinent de travailler en pair programming. Nous avons donc avancé linéairement sur les différentes fonctionnalités, l'une après l'autre, c'est pourquoi notre git ne possède qu'une branche.
 
 ## Fonctionnalités développées 
 
